@@ -67,7 +67,10 @@
                     <option *ngFor="let dept of departments" [value]="dept.id"> {{ dept.name}}</option>
                 </select>
             </div>
-    
+            <div class="form-group">
+                <label for="phoneNumber">date of birth</label>
+                <input type="date" [(ngModel)]="dateOfBirth" name="dateOfBirth" class="form-control" id="email" placeholder="Input date of birth">
+            </div>
     </div>
 
         <div class="panel-footer">
