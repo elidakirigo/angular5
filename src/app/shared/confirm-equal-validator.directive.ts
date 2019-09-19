@@ -2,7 +2,7 @@ import { Validator, NG_VALIDATORS, AbstractControl } from '@angular/forms';
 import { Directive, Input } from '@angular/core';
 
 @Directive({
-    selector : '[appConfirmEqualSelctor]',
+    selector : '[appConfirmEqualValidator]',
     providers : [{
         provide: NG_VALIDATORS,
         useExisting: ConfirmEqualValidatorDirective,

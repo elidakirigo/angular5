@@ -153,9 +153,11 @@
                 <span class="help-block" *ngIf="password.touched && password.errors?.required">password required</span>
             </div>
 
+            <div ></div>
+
             <div class="form-group" [class.has-error]="ConfirmPassword.touched && ConfirmPassword.invalid">
                 <label for="ConfirmPassword" class="control-label">password</label>
-                <input type="text" [(ngModel)]="employee.ConfirmPassword" required name="ConfirmPassword" appConfirmPassword="password" class="form-control" #confirmPassword="ngModel" id="ConfirmPassword" placeholder="confirm password">
+                <input type="text" [(ngModel)]="employee.ConfirmPassword" required name="ConfirmPassword" appConfirmEqualValidator="password" class="form-control" #ConfirmPassword="ngModel" id="ConfirmPassword" placeholder="confirm password">
                 <span class="help-block" *ngIf="ConfirmPassword.touched && ConfirmPassword.errors?.required">confirm password required</span>
                 <span class="help-block" *ngIf="ConfirmPassword.touched && ConfirmPassword.errors?.notEqual">password and confirm password do not match </span>
             </div>
