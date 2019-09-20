@@ -6,7 +6,7 @@ export class Employee {
     phoneNumber?: number;
     contactPreference: string;
     dateOfBirth: Date;
-    department: string;
+    department: number;
     isActive: boolean;
-    photopath?: string;
+    photoPath?: string;
 }

@@ -1,78 +1,20 @@
-<div class="panel panel-primary" *ngFor="let employee of employees">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ employee.name }}</h3>
-    </div>
-    <div class="panel-body">
-        <div class="col-xs-10">
-            <div class="row">
-                <div class="col-xs-4">
-                    <img class="imageClass" [src]='employee.photopath'/>
-                </div>
-                <div class="col-xs-8">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            Gender 
-                        </div>
-                        <div class="col-xs-6">
-                            {{ employee.gender }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            date of birth 
-                        </div>
-                        <div class="col-xs-6">
-                            {{ employee.dateOfBirth | date }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            contact preference 
-                        </div>
-                        <div class="col-xs-6">
-                            {{ employee.contactPreference }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            phone 
-                        </div>
-                        <div class="col-xs-6">
-                            {{ employee.phoneNumber }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            email 
-                        </div>
-                        <div class="col-xs-6">
-                            {{ employee.email }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            department 
-                        </div>
-                        <div class="col-xs-6">
-                            {{ employee.department }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            is active 
-                        </div>
-                        <div class="col-xs-6">
-                            {{ employee.isActive }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- <h1 *ngIf="dataFromChild">
+   {{ dataFromChild?.name + ' ' + dataFromChild?.gender }} employeeFilter: searchTerm
+</h1> -->
+<div class="form-group">
+   <input type="text" class="form-control" placeholder="Search by Name" style="width:300px;" [(ngModel)]="searchTerm" />
+</div>
+<div class="form-group">
+   <button class="btn btn-primary" (click)="changeEmployeeName()">change employee Name</button>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-body">
-       Basic panel example
-    </div>
+<div *ngFor="let employee of filteredEmployees ">
+   <div (click)="onClick(employee.id)"class="pointCursor">  
+    <app-display-employee [employee]="employee"></app-display-employee>
+   </div>
 </div>
+<!-- (notify)="handleNotify($event)" -->
+<!-- <button (click)="nextEmployee()" class="btn btn-primary"> view next employee </button>
+<br>
+<br>
+<app-display-employee [employee]="employeeToDisplay" [employeeId]="employeeToDisplay.id"></app-display-employee> -->

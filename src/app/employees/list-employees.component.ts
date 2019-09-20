@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Employee } from '../models/employee.model';
+import { EmployeeService } from './employee.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-list-employees',
@@ -10,45 +12,93 @@ export class ListEmployeesComponent implements OnInit {
 
   email = 'none';
 
-  
+  employees: Employee[];
 
-  employees: Employee[] = [
-    {id: 1,
-      name: 'Mark',
-      gender: 'Male',
-      email: 'mark@pragimtech.com',
-      phoneNumber: 324563,
-      contactPreference: 'Email',
-      dateOfBirth: new Date('10/25/1998'),
-      department: 'IT',
-      isActive: true,
-      photopath: 'assets/images/person1.jpg'
-    },
-    { id: 2,
-    name: 'mary',
-    gender: 'Female',
-    phoneNumber : 7867899,
-    contactPreference: 'phone' ,
-    dateOfBirth: new Date('11/2/3432'),
-    department: 'hr',
-    isActive: true,
-    photopath: 'assets/images/person2.jpg'
-  },
-  {
-    id: 3,
-    name: 'john',
-    gender: 'Male',
-    phoneNumber: 456432,
-    contactPreference: 'phone',
-    dateOfBirth: new Date('3/24/1995'),
-    department: 'IT',
-    isActive: false,
-    photopath: 'assets/images/person3.jpg',
+  filteredEmployees: Employee[];
+
+  // tslint:disable-next-line: variable-name
+  private _searchTerm: string;
+
+  get searchTerm(): string {
+
+    return this._searchTerm;
   }
-  ];
-  constructor() { }
+
+  set searchTerm(value: string) {
+
+    this._searchTerm = value;
+
+    this.filteredEmployees = this.filterEmployees(value);
+  }
+
+  // dataFromChild: Employee;
+
+  // employeeToDisplay: Employee;
+
+  // private arrayIndex = 1;
+
+  // tslint:disable-next-line: variable-name
+  constructor(private _employeeService: EmployeeService, private _route: ActivatedRoute, private _router: Router) { }
+
+  // nextEmployee(): void {
+
+  //   if (this.arrayIndex <= 2) {
+
+  //     this.employeeToDisplay = this.employees[this.arrayIndex];
+
+  //     this.arrayIndex++;
+
+  //   } else {
+
+  //     this.employeeToDisplay = this.employees[0];
+
+  //     this.arrayIndex = 1;
+  //   }
+  // }
 
   ngOnInit() {
+
+    this.employees = this._employeeService.getEmployees();
+
+    this.filteredEmployees = this.employees;
+
+    if (this._route.snapshot.queryParamMap.has('searchTerm')) {
+      this.searchTerm = this._route.snapshot.queryParamMap.get('serachTerm');
+    } else {
+      this.filteredEmployees = this.employees;
+    }
+
+    // this.employeeToDisplay = this.employees[0];
   }
 
+  onClick(employeeId: number) {
+
+    this._router.navigate(['/employees', employeeId], {
+      // tslint:disable-next-line: object-literal-key-quotes
+      queryParams: { 'searchTerm': this.searchTerm, 'testParam': 'testValue' }
+    });
+  }
+
+  changeEmployeeName() {
+    // this.employees[0].name = 'jordan';
+    // this.filteredEmployees = this.filterEmployees(this.searchTerm);
+
+    const newEmployeeArray: Employee[] = Object.assign([], this.employees);
+
+    newEmployeeArray[0].name = 'jordan';
+
+    this.employees = newEmployeeArray;
+
+  }
+
+  filterEmployees(searchString: string) {
+
+    return this.employees.filter(employee => employee.name.toLocaleLowerCase().indexOf(searchString.toLocaleLowerCase()) !== -1);
+
+  }
+
+  //   handleNotify(eventData: Employee) {
+
+  //     this.dataFromChild = eventData;
+  //   }
 }

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Department } from '../models/department.model';
 import { Employee } from '../models/employee.model';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { Router } from '@angular/router';
+import { EmployeeService } from './employee.service';
 
 @Component({
   selector: 'app-create-employee',
@@ -11,13 +13,17 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 })
 export class CreateEmployeeComponent implements OnInit {
 
-  constructor() {
-    this.datePickeConfig = Object.assign({} , {
-      containerClass: 'theme-dark-blue' ,
+  @ViewChild('employeeForm', { static: false }) public createEmployeeForm: NgForm;
+
+  // tslint:disable-next-line: variable-name
+  constructor(private _employeeService: EmployeeService, private _router: Router) {
+    this.datePickeConfig = Object.assign({}, {
+      containerClass: 'theme-dark-blue',
       showWeekNumbers: false,
       minDate: new Date(2018, 0, 1),
       maxDate: new Date(2019, 11, 31),
-      dateInputFormat: 'DD/MM/YYYY' });
+      dateInputFormat: 'DD/MM/YYYY'
+    });
   }
 
   gender = 'Male';
@@ -28,7 +34,7 @@ export class CreateEmployeeComponent implements OnInit {
 
   datePickeConfig: Partial<BsDatepickerConfig>;
 
-  dateOfBirth: Date =  new Date(2018, 0, 30);
+  dateOfBirth: Date = new Date(2018, 0, 30);
 
   previewPhoto = false;
 
@@ -42,16 +48,16 @@ export class CreateEmployeeComponent implements OnInit {
     phoneNumber: null,
     contactPreference: null,
     dateOfBirth: null,
-    department: 'select',
+    department: -1,
     isActive: null,
-    photopath: null
+    photoPath: null
   };
 
   departments: Department[] = [
-    { id : 1, name : 'help desk'},
-    { id : 2, name : 'HR'},
-    { id : 3, name : 'IT'},
-    { id : 4, name : 'payroll'}
+    { id: 1, name: 'help desk' },
+    { id: 2, name: 'HR' },
+    { id: 3, name: 'IT' },
+    { id: 4, name: 'payroll' }
 
   ];
 
@@ -62,9 +68,22 @@ export class CreateEmployeeComponent implements OnInit {
   ngOnInit() {
   }
 
-  saveEmployee(newEmployee: Employee): void {
+  saveEmployee(): void {
 
-    console.log(newEmployee);
+    // console.log(newEmployee);
+    const newEmployee: Employee = Object.assign({}, this.employee);
+
+    this._employeeService.save(newEmployee);
+
+    // this._employeeService.save(this.employee);
+
+    this.createEmployeeForm.reset();
+
+    // this.createEmployeeForm.reset(/* { name: 'TestName', contactPreference: 'phone'} */);
+
+    // empForm.reset();
+
+    this._router.navigate(['list']);
 
   }
 }
