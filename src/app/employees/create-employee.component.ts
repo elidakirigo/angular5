@@ -3,6 +3,8 @@ import { NgForm } from '@angular/forms';
 import { Department } from '../models/department.model';
 import { Employee } from '../models/employee.model';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { Router } from '@angular/router';
+import { EmployeeService } from './employee.service';
 
 @Component({
   selector: 'app-create-employee',
@@ -11,7 +13,8 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 })
 export class CreateEmployeeComponent implements OnInit {
 
-  constructor() {
+  // tslint:disable-next-line: variable-name
+  constructor(private _employeeService: EmployeeService, private _router: Router) {
     this.datePickeConfig = Object.assign({} , {
       containerClass: 'theme-dark-blue' ,
       showWeekNumbers: false,
@@ -42,9 +45,9 @@ export class CreateEmployeeComponent implements OnInit {
     phoneNumber: null,
     contactPreference: null,
     dateOfBirth: null,
-    department: 'select',
+    department: -1,
     isActive: null,
-    photopath: null
+    photoPath: null
   };
 
   departments: Department[] = [
@@ -62,9 +65,11 @@ export class CreateEmployeeComponent implements OnInit {
   ngOnInit() {
   }
 
-  saveEmployee(newEmployee: Employee): void {
+  saveEmployee(): void {
 
-    console.log(newEmployee);
+    // console.log(newEmployee);
+    this._employeeService.save(this.employee);
+    this._router.navigate(['list']);
 
   }
 }
