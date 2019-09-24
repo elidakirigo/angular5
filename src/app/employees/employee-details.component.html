@@ -75,7 +75,8 @@
         </div>
     </div>
     <div class="panel-footer">
-        <a queryParamsHandling="merge" [queryParams]="{'newParam' : 'newValue'}" [routerLink]="['/list', { id:employee.id }]" class="btn btn-primary">Back to List</a>
+        <a queryParamsHandling="preserve" [routerLink]="['/list', { id:employee.id }]" class="btn btn-primary">Back to List</a>
         <button class="btn btn-primary pull-right" (click)="viewNextEmployee()">view Next Employee</button>
     </div>
 </div>
+  <!-- [queryParams]="{'newParam' : 'newValue'}" --> 

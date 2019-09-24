@@ -11,7 +11,7 @@ export class EmployeeFilterPipe implements PipeTransform {
   transform(employees: Employee[], searchTerm: string): Employee[] {
 
     this.counter++;
-    console.log(this.counter);
+    //console.log(this.counter);
 
     if (!employees || !searchTerm) {
       return employees;

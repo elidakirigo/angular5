@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Department } from '../models/department.model';
 import { Employee } from '../models/employee.model';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { EmployeeService } from './employee.service';
 
 @Component({
@@ -15,8 +15,9 @@ export class CreateEmployeeComponent implements OnInit {
 
   @ViewChild('employeeForm', { static: false }) public createEmployeeForm: NgForm;
 
+
   // tslint:disable-next-line: variable-name
-  constructor(private _employeeService: EmployeeService, private _router: Router) {
+  constructor(private _route: ActivatedRoute, private _employeeService: EmployeeService, private _router: Router) {
     this.datePickeConfig = Object.assign({}, {
       containerClass: 'theme-dark-blue',
       showWeekNumbers: false,
@@ -25,6 +26,8 @@ export class CreateEmployeeComponent implements OnInit {
       dateInputFormat: 'DD/MM/YYYY'
     });
   }
+
+  panelTitle: string;
 
   gender = 'Male';
 
@@ -46,7 +49,7 @@ export class CreateEmployeeComponent implements OnInit {
     gender: null,
     email: null,
     phoneNumber: null,
-    contactPreference: null,
+    ContactPreference: null,
     dateOfBirth: null,
     department: -1,
     isActive: null,
@@ -66,6 +69,37 @@ export class CreateEmployeeComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this._route.paramMap.subscribe(parameterMap => {
+
+      const id = +parameterMap.get('id');
+
+      this.getEmployee(id);
+    });
+  }
+  private getEmployee(id: number) {
+
+    if (id === 0) {
+      this.employee = {
+        id: null,
+        name: null,
+        gender: null,
+        email: null,
+        phoneNumber: null,
+        ContactPreference: null,
+        dateOfBirth: null,
+        department: -1,
+        isActive: null,
+        photoPath: null
+      };
+      this.panelTitle = 'create employee';
+    } else {
+      this.panelTitle = 'edit employee';
+
+      this.createEmployeeForm.reset();
+      this.employee = Object.assign({}, this._employeeService.getEmployee(id));
+
+    }
   }
 
   saveEmployee(): void {

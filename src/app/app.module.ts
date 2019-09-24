@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { HttpClientModule } from '@angular/common/http';
 
 
 import { AppComponent } from './app.component';
@@ -18,12 +19,15 @@ import { EmployeeDetailsComponent } from './employees/employee-details.component
 import { EmployeeFilterPipe } from './employees/employee-filter.pipe';
 import { EmployeeListResolverService } from './employees/employee-list-resolver.service';
 import { PageNotFoundComponent } from './page-not-found.component';
+import { EmployeeDetailGuardService } from './employees/employee-details-guard.service';
+import { AccordionComponent } from './shared/accordion.component';
 
 
 const appRoutes: Routes = [
   { path: 'list', component: ListEmployeesComponent , resolve : {employeeList : EmployeeListResolverService}},
-  { path: 'employees/:id', component: EmployeeDetailsComponent },
-  { path: 'create', component: CreateEmployeeComponent, canDeactivate: [CreateEmployeeCanDeactivateGuardService] },
+  { path: 'employees/:id', component: EmployeeDetailsComponent , canActivate : [EmployeeDetailGuardService]},
+  { path: 'notFound', component: PageNotFoundComponent },
+  { path: 'edit/:id', component: CreateEmployeeComponent, canDeactivate: [CreateEmployeeCanDeactivateGuardService] },
   { path: '', redirectTo: '/list', pathMatch: 'full' }
 ];
 
@@ -37,16 +41,18 @@ const appRoutes: Routes = [
     DisplayEmployeeComponent,
     EmployeeDetailsComponent,
     EmployeeFilterPipe,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    AccordionComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     BsDatepickerModule.forRoot(),
-    RouterModule.forRoot(appRoutes , {enableTracing : true})
+    RouterModule.forRoot(appRoutes , /* {enableTracing : true} */)
   ],
-  providers: [EmployeeService, CreateEmployeeCanDeactivateGuardService, EmployeeListResolverService],
+  providers: [EmployeeDetailGuardService, EmployeeService, CreateEmployeeCanDeactivateGuardService, EmployeeListResolverService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

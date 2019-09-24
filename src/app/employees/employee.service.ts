@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Employee } from '../models/employee.model';
-import { Observable , of } from 'rxjs';
-// import { of } from 'rxjs';
-// import { of } from 'rxjs/observable/of';
+import { Observable, of } from 'rxjs';
 import 'rxjs/add/operator/delay';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
+
 export class EmployeeService {
+
+  constructor( private httpClient: HttpClient){}
   private listEmployees: Employee[] = [
     {
       id: 1,
@@ -14,7 +16,7 @@ export class EmployeeService {
       gender: 'Male',
       email: 'mark@pragimtech.com',
       phoneNumber: 324563,
-      contactPreference: 'Email',
+      ContactPreference: 'Email',
       dateOfBirth: new Date('10/25/1998'),
       department: 3,
       isActive: true,
@@ -25,7 +27,7 @@ export class EmployeeService {
       name: 'mary',
       gender: 'Female',
       phoneNumber: 7867899,
-      contactPreference: 'phone',
+      ContactPreference: 'Phone',
       dateOfBirth: new Date('11/2/3432'),
       department: 2,
       isActive: true,
@@ -36,7 +38,7 @@ export class EmployeeService {
       name: 'john',
       gender: 'Male',
       phoneNumber: 456432,
-      contactPreference: 'phone',
+      ContactPreference: 'Phone',
       dateOfBirth: new Date('3/24/1995'),
       department: 3,
       isActive: false,
@@ -46,7 +48,8 @@ export class EmployeeService {
 
   getEmployees(): Observable<Employee[]> {
 
-    return of(this.listEmployees).delay(2000);
+    // return of(this.listEmployees).delay(2000);
+    return this.httpClient.get<Employee[]>('http://localhost:3000/employees');
   }
 
   getEmployee(id: number): Employee {
@@ -54,8 +57,35 @@ export class EmployeeService {
     return this.listEmployees.find(e => e.id === id);
   }
 
+  private handleError(){
+    
+  }
+
   save(employee: Employee) {
 
-    this.listEmployees.push(employee);
+    if (employee.id == null) {
+
+      // tslint:disable-next-line: only-arrow-functions
+      const maxid = this.listEmployees.reduce(function(e1, e2) {
+        return (e1.id > e2.id) ? e1 : e2;
+      }).id;
+
+      employee.id = maxid + 1;
+      this.listEmployees.push(employee);
+
+    } else {
+
+      const foundIndex = this.listEmployees.findIndex(e => e.id === employee.id);
+
+      this.listEmployees[foundIndex] = employee;
+    }
+  }
+
+  deleteEmployee(id: number) {
+    const i = this.listEmployees.findIndex(e => e.id === id);
+
+    if (i !== -1) {
+      this.listEmployees.splice(i, 1);
+    }
   }
 }

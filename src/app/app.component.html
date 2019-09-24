@@ -5,11 +5,11 @@
         <a routerLink="list">list</a>
       </li>
       <li>
-        <a routerLink="create">create</a>
+        <a routerLink="edit/0">create</a>
       </li>
-      <li>
+      <!-- <li>
         <a [routerLink]="['/employees', 2]">get employee with id 2</a>
-      </li>
+      </li> -->
     </ul>
   </nav>
   <div *ngIf="showLoadingIndecator" class="spinner"></div>

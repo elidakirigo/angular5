@@ -72,37 +72,46 @@ export class ListEmployeesComponent implements OnInit {
     //   this.employees = empList;
 
     // });
-    // console.log(new Date().toTimeString());
+    // //console.log(new Date().toTimeString());
 
     // this.filteredEmployees = this.employees;
 
     // this.employeeToDisplay = this.employees[0];
   }
 
-  onClick(employeeId: number) {
+  // onClick(employeeId: number) {
 
-    this._router.navigate(['/employees', employeeId], {
-      // tslint:disable-next-line: object-literal-key-quotes
-      queryParams: { 'searchTerm': this.searchTerm, 'testParam': 'testValue' }
-    });
-  }
+  //   this._router.navigate(['/employees', employeeId], {
+  //     // tslint:disable-next-line: object-literal-key-quotes
+  //     queryParams: { 'searchTerm': this.searchTerm, 'testParam': 'testValue' }
+  //   });
+  // }
 
-  changeEmployeeName() {
-    // this.employees[0].name = 'jordan';
-    // this.filteredEmployees = this.filterEmployees(this.searchTerm);
+  // changeEmployeeName() {
+  //   // this.employees[0].name = 'jordan';
+  //   // this.filteredEmployees = this.filterEmployees(this.searchTerm);
 
-    const newEmployeeArray: Employee[] = Object.assign([], this.employees);
+  //   const newEmployeeArray: Employee[] = Object.assign([], this.employees);
 
-    newEmployeeArray[0].name = 'jordan';
+  //   newEmployeeArray[0].name = 'jordan';
 
-    this.employees = newEmployeeArray;
+  //   this.employees = newEmployeeArray;
 
-  }
+  // }
 
   filterEmployees(searchString: string) {
 
     return this.employees.filter(employee => employee.name.toLocaleLowerCase().indexOf(searchString.toLocaleLowerCase()) !== -1);
 
+  }
+
+  onDeleteNotification(id: number) {
+
+    const i = this.filteredEmployees.findIndex(e => e.id === id);
+
+    if (i !== -1) {
+      this.filteredEmployees.splice(i, 1);
+    }
   }
 
   //   handleNotify(eventData: Employee) {
