@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {  FormsModule,  } from '@angular/forms';
+import { FormsModule, } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
@@ -16,13 +16,15 @@ import { DisplayEmployeeComponent } from './employees/display-employee.component
 import { CreateEmployeeCanDeactivateGuardService } from './employees/create-employee-can-deactivate-guard-service';
 import { EmployeeDetailsComponent } from './employees/employee-details.component';
 import { EmployeeFilterPipe } from './employees/employee-filter.pipe';
+import { EmployeeListResolverService } from './employees/employee-list-resolver.service';
+import { PageNotFoundComponent } from './page-not-found.component';
 
 
 const appRoutes: Routes = [
-  { path : 'list' , component : ListEmployeesComponent},
-  { path : 'employees/:id' , component : EmployeeDetailsComponent},
-  { path : 'create' , component : CreateEmployeeComponent, canDeactivate : [CreateEmployeeCanDeactivateGuardService]},
-  { path : '' , redirectTo : '/list' , pathMatch : 'full'}
+  { path: 'list', component: ListEmployeesComponent , resolve : {employeeList : EmployeeListResolverService}},
+  { path: 'employees/:id', component: EmployeeDetailsComponent },
+  { path: 'create', component: CreateEmployeeComponent, canDeactivate: [CreateEmployeeCanDeactivateGuardService] },
+  { path: '', redirectTo: '/list', pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -34,16 +36,17 @@ const appRoutes: Routes = [
     ConfirmEqualValidatorDirective,
     DisplayEmployeeComponent,
     EmployeeDetailsComponent,
-    EmployeeFilterPipe
+    EmployeeFilterPipe,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     BrowserAnimationsModule,
     BsDatepickerModule.forRoot(),
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes , {enableTracing : true})
   ],
-  providers: [EmployeeService, CreateEmployeeCanDeactivateGuardService],
+  providers: [EmployeeService, CreateEmployeeCanDeactivateGuardService, EmployeeListResolverService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
