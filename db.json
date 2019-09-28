@@ -29,7 +29,7 @@
       "gender": "Male",
       "phoneNumber": 456432,
       "ContactPreference": "Phone",
-      "dateOfBirth": "new Date('3/24/1995')",
+      "dateOfBirth": "3/24/1995",
       "department": 3,
       "isActive": false,
       "photoPath": "assets/images/person3.jpg"

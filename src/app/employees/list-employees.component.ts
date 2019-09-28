@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Employee } from '../models/employee.model';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ResolvedEmployeeList } from './resolved-employeeList.model';
 
 @Component({
   selector: 'app-list-employees',
@@ -14,6 +15,8 @@ export class ListEmployeesComponent implements OnInit {
   employees: Employee[];
 
   filteredEmployees: Employee[];
+
+  error: string;
 
   // tslint:disable-next-line: variable-name
   private _searchTerm: string;
@@ -40,7 +43,13 @@ export class ListEmployeesComponent implements OnInit {
   constructor(private _route: ActivatedRoute, private _router: Router) {
 
     // tslint:disable-next-line: no-string-literal
-    this.employees = this._route.snapshot.data['employeeList'];
+    const resolvedEmployeeList: ResolvedEmployeeList = this._route.snapshot.data['employeeList'];
+
+    if(resolvedEmployeeList.error == null) {
+      this.employees = resolvedEmployeeList.employeeList;
+    } else {
+      this.error = resolvedEmployeeList.error;
+    }
 
     if (this._route.snapshot.queryParamMap.has('searchTerm')) {
       this.searchTerm = this._route.snapshot.queryParamMap.get('serachTerm');

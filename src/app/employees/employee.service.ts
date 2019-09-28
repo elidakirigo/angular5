@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { Employee } from '../models/employee.model';
 import { Observable, of } from 'rxjs';
 import 'rxjs/add/operator/delay';
-import { HttpClient } from '@angular/common/http';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import { catchError } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 @Injectable()
 
 export class EmployeeService {
 
-  constructor( private httpClient: HttpClient){}
+  constructor(private httpClient: HttpClient) { }
   private listEmployees: Employee[] = [
     {
       id: 1,
@@ -46,39 +50,67 @@ export class EmployeeService {
     }
   ];
 
+  baseUrl = 'http://localhost:3000/employees';
+
   getEmployees(): Observable<Employee[]> {
 
     // return of(this.listEmployees).delay(2000);
-    return this.httpClient.get<Employee[]>('http://localhost:3000/employees');
+    return this.httpClient.get<Employee[]>('http://localhost:3000/employees').catch(this.handleError);
   }
 
-  getEmployee(id: number): Employee {
+  getEmployee(id: number): Observable<Employee> {
 
-    return this.listEmployees.find(e => e.id === id);
+    // return this.listEmployees.find(e => e.id === id);
+    return this.httpClient.get<void>(`${this.baseUrl}/${employee.id}`).pipe(catchError(this.handleError));
+
   }
 
-  private handleError(){
-    
-  }
+  private handleError(errorResponse: HttpErrorResponse) {
 
-  save(employee: Employee) {
+    if (errorResponse.error instanceof ErrorEvent) {
 
-    if (employee.id == null) {
-
-      // tslint:disable-next-line: only-arrow-functions
-      const maxid = this.listEmployees.reduce(function(e1, e2) {
-        return (e1.id > e2.id) ? e1 : e2;
-      }).id;
-
-      employee.id = maxid + 1;
-      this.listEmployees.push(employee);
+      console.error(errorResponse.error.message, errorResponse);
 
     } else {
+      console.error(errorResponse);
 
-      const foundIndex = this.listEmployees.findIndex(e => e.id === employee.id);
-
-      this.listEmployees[foundIndex] = employee;
     }
+
+    return new ErrorObservable('theres a problem with a server we are notified and get to it');
+  }
+
+  addEmployee(employee: Employee): Observable<Employee> {
+
+
+    return this.httpClient.post<Employee>('http://localhost:3000/employees', employee, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }).pipe(catchError(this.handleError));
+
+    // if (employee.id == null) {
+    // tslint:disable-next-line: only-arrow-functions
+    // const maxid = this.listEmployees.reduce(function(e1, e2) {
+    //   return (e1.id > e2.id) ? e1 : e2;
+    // }).id;
+    // employee.id = maxid + 1;
+    // this.listEmployees.push(employee);
+    // } else {
+
+    //   const foundIndex = this.listEmployees.findIndex(e => e.id === employee.id);
+
+    //   this.listEmployees[foundIndex] = employee;
+    // }
+  }
+
+  updateEmployee(employee: Employee): Observable<void> {
+
+    return this.httpClient.put<void>(`${this.baseUrl}/${employee.id}`, employee, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }).pipe(catchError(this.handleError));
+
   }
 
   deleteEmployee(id: number) {
